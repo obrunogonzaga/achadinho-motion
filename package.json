@@ -1,0 +1,24 @@
+{
+  "name": "achadinho-motion",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Skill que transforma fotos de um achadinho em Reel animado com legenda palavra por palavra.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio remotion/index.ts",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.534",
+    "@remotion/google-fonts": "4.0.534",
+    "@remotion/media": "4.0.534",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "remotion": "4.0.534"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "typescript": "^5"
+  }
+}
