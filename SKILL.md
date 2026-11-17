@@ -82,6 +82,7 @@ As paradas marcadas com ⏸ esperam a aprovação do usuário. Não pule nenhuma
 - **Tom:** frases curtas e faladas, em português do Brasil. Uma ideia por cena. Sem "melhor do mundo", "revolucionário" ou "você não vai acreditar".
 - **`dor`**, quando usada, não cita o produto. **`chamada`** pede uma ação só e fala a `palavraChave`, se houver.
 - `carimbo`: até 2 palavras, batendo na foto no primeiro destaque. Na cena `achado`, o padrão é "Achado!".
+- `botao`: texto do botão da última cena. Padrão: "Comenta PALAVRA" quando há `palavraChave`. Para rede sem automação de comentário (TikTok), troque a chamada e use algo como `"achoumorou.com"`.
 - `mascote`: `"lupa"` (padrão), `"nenhum"` ou um arquivo de imagem da pasta do projeto (PNG ou SVG com fundo transparente), como o mascote da sua marca: `"mascote.svg"`.
   - Em SVG, os olhos ganham vida: marque cada olho com `<g class="olho">` (pisca) e a pupila dentro dele com `class="pupila"` (olha em volta). Centralize a pupila no olho; a skill desloca até ~15 unidades do `viewBox`.
 - `emocao` (opcional): tag de emoção do ElevenLabs v3, como `excited`. Ignorada por outros TTS.

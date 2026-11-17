@@ -10,7 +10,10 @@ const ELEVENLABS = "https://api.elevenlabs.io/v1/text-to-speech";
 const VOZ_PADRAO = "GK4ZNLi5L8ZOBBT2Kaww";
 const MODELO_PADRAO = "eleven_v3";
 
+const EXIGE = { comando: "VOZ_COMANDO", elevenlabs: "ELEVENLABS_API_KEY" };
+
 export const escolherProvedor = (pedido) => {
+  if (pedido && EXIGE[pedido] && !process.env[EXIGE[pedido]]) throw new Error(`--voz ${pedido} precisa de ${EXIGE[pedido]} no ambiente.`);
   if (pedido) return pedido;
   if (process.env.VOZ_COMANDO) return "comando";
   if (process.env.ELEVENLABS_API_KEY) return "elevenlabs";

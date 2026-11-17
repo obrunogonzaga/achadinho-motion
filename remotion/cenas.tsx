@@ -73,12 +73,12 @@ const CenaSinal = ({ cena, timeline }: PropsCena) => {
   );
 };
 
-const BotaoComenta = ({ palavra, inicio, cor, corTexto }: { palavra: string; inicio: number; cor: string; corTexto: string }) => {
+const BotaoChamada = ({ texto, inicio, cor, corTexto }: { texto: string; inicio: number; cor: string; corTexto: string }) => {
   const quadro = useCurrentFrame();
   const pop = usePop(inicio);
   const pulso = 1 + 0.06 * Math.max(0, Math.sin((quadro - inicio) * 0.35));
   const estilo: CSSProperties = { position: "absolute", top: 1180, left: 70, right: 70, padding: "34px 40px 42px", borderRadius: 80, background: cor, color: corTexto, textAlign: "center", font: `800 92px/1 ${FONTE_TITULO}`, transform: `scale(${pop * pulso})` };
-  return <div style={estilo}>Comenta {palavra}</div>;
+  return <div style={estilo}>{texto}</div>;
 };
 
 const MascotePulando = ({ mascote, svg, inicio, cor }: { mascote: string; svg: string | null; inicio: number; cor: string }) => {
@@ -93,12 +93,12 @@ const MascotePulando = ({ mascote, svg, inicio, cor }: { mascote: string; svg: s
 };
 
 const CenaChamada = ({ cena, timeline }: PropsCena) => {
-  const { cores, palavraChave, mascote, mascoteSvg } = timeline;
+  const { cores, botao, mascote, mascoteSvg } = timeline;
   return (
     <AbsoluteFill style={{ background: cores.destaque }}>
       <Camera socos={momentosDeDestaque(cena)}>
         <Legenda palavras={cena.palavras} cor={cores.primaria} corDestaque={{ cor: cores.primaria, corTexto: cores.destaque }} topo={420} />
-        {palavraChave ? <BotaoComenta palavra={palavraChave} inicio={cena.palavras[0].quadro} cor={cores.primaria} corTexto={BRANCO} /> : null}
+        {botao ? <BotaoChamada texto={botao} inicio={cena.palavras[0].quadro} cor={cores.primaria} corTexto={BRANCO} /> : null}
         <MascotePulando mascote={mascote} svg={mascoteSvg} inicio={4} cor={cores.primaria} />
       </Camera>
     </AbsoluteFill>
