@@ -11,9 +11,14 @@ Fotos do produto + texto do anúncio → `video.mp4` (1080×1920, H.264) + `capa
 
 - Node 18+ e `ffmpeg` (com `ffprobe`)
 - Python 3 com `numpy` e `scipy` (`pip install numpy scipy`)
-- Só para voz: `ELEVENLABS_API_KEY` no ambiente e `openai-whisper` (`pip install openai-whisper`), que marca o tempo de cada palavra
+- Só para voz, uma das duas opções:
+  - `VOZ_COMANDO`: qualquer TTS de linha de comando (local, gratuito), com `{texto}`, `{saida}` e, se ele devolver o tempo das palavras, `{palavras}`. Exemplo: `VOZ_COMANDO='meutts say {texto} -o {saida} -w {palavras}'`
+  - `ELEVENLABS_API_KEY` no ambiente
+- `openai-whisper` (`pip install openai-whisper`), só quando o TTS não devolve o tempo das palavras
 
-Sem a chave, o vídeo sai só com legenda e trilha, e o tempo das palavras é estimado.
+Sem voz, o vídeo sai só com legenda e trilha, e o tempo das palavras é estimado.
+
+O arquivo `{palavras}` precisa estar no formato `{"words": [{"text": "Levantou", "start": 0.0}, ...]}`, com `start` em segundos.
 
 ## Passo a passo
 
@@ -95,16 +100,16 @@ Campos:
 
 Em ordem:
 
-1. `voz.py`: uma narração por cena (`voz/01-dor.wav` …), normalizada em -16 LUFS e 1,1× mais rápida. Só refaz a cena que mudou. Sem chave, pula.
-2. `timeline.py`: tempo de cada palavra (whisper, ou estimativa sem voz) → `timeline.json`.
+1. `voz.py`: uma narração por cena (`voz/01-dor.wav` …), normalizada em -16 LUFS. Usa `VOZ_COMANDO` se existir, senão o ElevenLabs. Só refaz a cena que mudou. Sem nenhum dos dois, pula.
+2. `timeline.py`: tempo de cada palavra (o que o TTS devolveu, senão whisper, senão estimativa) → `timeline.json`.
 3. `trilha.py`: batida com efeitos nos cortes, destaques e carimbos → `trilha.wav`.
 4. Remotion: `out/video.mp4` e `out/capa.jpg`.
 
-Variáveis opcionais: `ELEVENLABS_VOICE_ID` (padrão: Leo, português neutro), `ELEVENLABS_MODEL` (padrão `eleven_v3`), `VELOCIDADE_VOZ` (padrão `1.1`), `WHISPER_MODEL` (padrão `small`).
+Variáveis opcionais: `ELEVENLABS_VOICE_ID` (padrão: Leo, português neutro), `ELEVENLABS_MODEL` (padrão `eleven_v3`), `VELOCIDADE_VOZ` (padrão `1.1` no ElevenLabs e `1` no `VOZ_COMANDO`, que já controla a própria velocidade), `WHISPER_MODEL` (padrão `small`).
 
 Se o ElevenLabs responder `voice_not_found`, adicione a voz Leo em My Voices na sua conta ou use outra em `ELEVENLABS_VOICE_ID`.
 
-A primeira execução roda `npm install` na pasta da skill. O whisper leva cerca de 1 minuto em CPU.
+A primeira execução roda `npm install` na pasta da skill. Quando roda, o whisper leva cerca de 1 minuto em CPU.
 
 ### 5. Conferir antes de entregar
 

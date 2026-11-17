@@ -5,8 +5,8 @@ Skill para Claude Code (e outros agentes que leem `SKILL.md`) que transforma fot
 Você manda de 2 a 6 fotos do produto e o texto do anúncio. O agente:
 
 1. escreve um roteiro de ~25 s (dor → achado → 3 sinais → chamada), só com funções que estão no anúncio;
-2. gera a narração pelo ElevenLabs, se você tiver a chave;
-3. marca o tempo de cada palavra com o whisper;
+2. gera a narração com o seu TTS de linha de comando ou pelo ElevenLabs;
+3. marca o tempo de cada palavra (pelo próprio TTS ou com o whisper);
 4. monta a trilha com efeitos sonoros;
 5. renderiza o vídeo 1080×1920 e a capa no Remotion.
 
@@ -22,13 +22,21 @@ pip install numpy scipy openai-whisper
 
 Também precisa de Node 18+ e `ffmpeg`.
 
-Para ter voz, exporte a chave do ElevenLabs:
+Para ter voz, escolha uma opção.
+
+Um TTS seu, de linha de comando (por exemplo, um modelo aberto rodando na sua GPU):
+
+```bash
+export VOZ_COMANDO='meutts say {texto} -o {saida} -w {palavras}'
+```
+
+Ou o ElevenLabs:
 
 ```bash
 export ELEVENLABS_API_KEY=...
 ```
 
-Sem a chave, o vídeo sai só com legenda e trilha.
+Sem voz, o vídeo sai só com legenda e trilha.
 
 ## Usar
 

@@ -37,6 +37,17 @@ def palavras_ouvidas(arquivo):
     return [(palavra["word"].strip(), palavra["start"]) for segmento in resultado["segments"] for palavra in segmento.get("words", [])]
 
 
+def palavras_do_tts(arquivo):
+    resultado = json.loads(arquivo.read_text())
+    return [(palavra["text"].strip(), palavra["start"]) for palavra in resultado["words"] if palavra.get("type", "word") == "word"]
+
+
+def ouvir(wavs):
+    com_tempos = {wav: wav.with_suffix(".palavras.json") for wav in wavs}
+    prontas = {wav: palavras_do_tts(arquivo) for wav, arquivo in com_tempos.items() if arquivo.exists()}
+    return {**prontas, **transcrever([wav for wav in wavs if wav not in prontas])}
+
+
 def alinhar(tokens, ouvidas):
     inicios = [None] * len(tokens)
     comparador = difflib.SequenceMatcher(None, [normalizar(t) for t in tokens], [normalizar(p) for p, _ in ouvidas], autojunk=False)
@@ -118,7 +129,7 @@ def montar_cena(projeto, roteiro, ouvidas, indice, inicio, numero):
 
 def montar_cenas(projeto, roteiro):
     wavs = [arquivo_de_voz(projeto, i, c) for i, c in enumerate(roteiro["cenas"])]
-    ouvidas = transcrever([wav for wav in wavs if wav.exists()])
+    ouvidas = ouvir([wav for wav in wavs if wav.exists()])
     cenas, inicio, sinais = [], 0, 0
     for indice, cena in enumerate(roteiro["cenas"]):
         sinais += cena["tipo"] == "sinal"
