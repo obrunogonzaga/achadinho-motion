@@ -23,7 +23,7 @@ export const Capa = (timeline: Timeline) => (
     <Titulo timeline={timeline} />
     {timeline.mascote !== "nenhum" ? (
       <div style={{ position: "absolute", bottom: 90, right: 70 }}>
-        <Mascote mascote={timeline.mascote} tamanho={240} cor={timeline.cores.primaria} olharX={-12} olharY={-8} />
+        <Mascote mascote={timeline.mascote} svg={timeline.mascoteSvg} tamanho={240} cor={timeline.cores.primaria} olharX={-12} olharY={-8} />
       </div>
     ) : null}
     {timeline.marca ? <Marca texto={timeline.marca} cor={timeline.cores.primaria} corTexto={BRANCO} /> : null}

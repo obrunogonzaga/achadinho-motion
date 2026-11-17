@@ -4,7 +4,7 @@ import path from "node:path";
 import { estimarPalavras } from "../../remotion/engine/estimativa.ts";
 import { ABERTURA, DURACAO_ALVO, TEMPO_MAXIMO, pausaDepoisDe } from "../../remotion/engine/ritmo.ts";
 import { FOLGA_FINAL, acharInicios, montarTimeline } from "../../remotion/engine/timing.ts";
-import { gravarJson, lerJson } from "./projeto.mjs";
+import { gravarJson, lerJson, lerMascoteSvg } from "./projeto.mjs";
 
 const lerPalavras = (arquivo) => {
   const dados = lerJson(arquivo);
@@ -82,6 +82,6 @@ export const montarAudio = (ficha, caminhos, { provedor, tempo }) => {
   const palavras = comVoz ? montarVoz(ficha, caminhos, tempo) : estimarPalavras(ficha);
   if (!comVoz) gravarJson(caminhos.palavras, { tempo: 1, words: palavras });
   const voz = comVoz ? path.relative(caminhos.raiz, caminhos.voz) : null;
-  gravarJson(caminhos.timeline, montarTimeline(ficha, palavras, { voz }));
+  gravarJson(caminhos.timeline, { ...montarTimeline(ficha, palavras, { voz }), mascoteSvg: lerMascoteSvg(ficha, caminhos) });
   console.log(`timeline: ${ficha.cenas.length} cenas, ${comVoz ? "com" : "sem"} voz`);
 };

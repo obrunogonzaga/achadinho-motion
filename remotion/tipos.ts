@@ -47,6 +47,7 @@ export type Timeline = {
   volumeTrilha: number;
   cores: Cores;
   mascote: string;
+  mascoteSvg: string | null;
   marca: string | null;
   palavraChave: string | null;
   capa: { titulo: string; foto: string | null };

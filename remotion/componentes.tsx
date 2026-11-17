@@ -1,4 +1,4 @@
-import type { CSSProperties, ReactNode } from "react";
+import { useId, type CSSProperties, type ReactNode } from "react";
 import { AbsoluteFill, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { BRANCO, FONTE_TEXTO, FONTE_TITULO, LIMITE, TINTA } from "./tema";
 import type { Palavra } from "./tipos";
@@ -176,13 +176,28 @@ export const Lupa = ({ tamanho, cor, olharX = 0, olharY = 0, piscando = false }:
   );
 };
 
-type PropsMascote = { mascote: string; tamanho: number; cor: string; olharX?: number; olharY?: number; piscando?: boolean };
+type PropsMascote = { mascote: string; svg?: string | null; tamanho: number; cor: string; olharX?: number; olharY?: number; piscando?: boolean };
 
-export const Mascote = ({ mascote, tamanho, cor, olharX, olharY, piscando }: PropsMascote) => {
+const MascoteSvg = ({ svg, tamanho, olharX = 0, olharY = 0, piscando = false }: Omit<PropsMascote, "mascote" | "cor" | "svg"> & { svg: string }) => {
+  const classe = `mascote-${useId().replace(/[^a-zA-Z0-9]/g, "")}`;
+  const regras = [
+    `.${classe} svg{width:100%;height:100%;overflow:visible}`,
+    `.${classe} .pupila{transform:translate(${olharX}px,${olharY}px)}`,
+    `.${classe} .olho{transform-box:fill-box;transform-origin:center;transform:scaleY(${piscando ? 0.1 : 1})}`,
+  ].join("");
+  return (
+    <div className={classe} style={{ width: tamanho, height: tamanho }}>
+      <style>{regras}</style>
+      <div style={{ width: "100%", height: "100%" }} dangerouslySetInnerHTML={{ __html: svg }} />
+    </div>
+  );
+};
+
+export const Mascote = ({ mascote, svg, tamanho, cor, olharX, olharY, piscando }: PropsMascote) => {
   if (mascote === "nenhum") return null;
   if (mascote === "lupa") return <Lupa tamanho={tamanho} cor={cor} olharX={olharX} olharY={olharY} piscando={piscando} />;
-  const piscada = piscando ? "scaleY(0.92)" : "none";
-  return <Img src={staticFile(mascote)} style={{ width: tamanho, height: tamanho, objectFit: "contain", transformOrigin: "50% 100%", transform: piscada }} />;
+  if (svg) return <MascoteSvg svg={svg} tamanho={tamanho} olharX={olharX} olharY={olharY} piscando={piscando} />;
+  return <Img src={staticFile(mascote)} style={{ width: tamanho, height: tamanho, objectFit: "contain" }} />;
 };
 
 export const Progresso = ({ duracao, cor, borda }: { duracao: number; cor: string; borda: string }) => {

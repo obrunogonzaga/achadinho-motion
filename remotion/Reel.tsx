@@ -26,7 +26,7 @@ const MascoteDoCanto = ({ timeline }: { timeline: Timeline }) => {
   const piscando = quadro % 90 < 4;
   return (
     <div style={{ position: "absolute", bottom: 50, right: 50 }}>
-      <Mascote mascote={timeline.mascote} tamanho={170} cor={timeline.cores.primaria} olharX={olharX} olharY={-8} piscando={piscando} />
+      <Mascote mascote={timeline.mascote} svg={timeline.mascoteSvg} tamanho={170} cor={timeline.cores.primaria} olharX={olharX} olharY={-8} piscando={piscando} />
     </div>
   );
 };

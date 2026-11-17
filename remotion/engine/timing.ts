@@ -87,7 +87,7 @@ export const montarTimeline = (ficha: Ficha, palavras: PalavraFalada[], { voz, t
   const duracaoFrames = Math.round((palavras[palavras.length - 1].end + FOLGA_FINAL) * FPS);
   return {
     fps: FPS, duracaoFrames, voz, trilha, volumeTrilha: voz ? 0.45 : 0.9,
-    cores: { ...CORES_PADRAO, ...ficha.cores }, mascote: ficha.mascote ?? "lupa",
+    cores: { ...CORES_PADRAO, ...ficha.cores }, mascote: ficha.mascote ?? "lupa", mascoteSvg: null,
     marca: ficha.marca ?? null, palavraChave: ficha.palavraChave ?? null,
     capa: { titulo: tituloDaCapa(ficha), foto: fotoDaCapa(ficha) },
     cenas: montarCenas(ficha, palavras, duracaoFrames),

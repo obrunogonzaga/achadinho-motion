@@ -58,3 +58,12 @@ export const carregarFicha = (caminhos) => {
   if (problemas.length) throw new Error(`roteiro.json com problema:\n- ${problemas.join("\n- ")}`);
   return ficha;
 };
+
+export const lerMascoteSvg = (ficha, caminhos) => {
+  if (!ficha.mascote?.endsWith(".svg")) return null;
+  return readFileSync(path.join(caminhos.raiz, ficha.mascote), "utf8")
+    .replace(/<script[\s\S]*?<\/script>/gi, "")
+    .replace(/\son\w+="[^"]*"/gi, "")
+    .replace(/<\?xml[^>]*>/, "")
+    .trim();
+};
