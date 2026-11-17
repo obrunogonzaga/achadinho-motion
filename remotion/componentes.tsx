@@ -176,6 +176,15 @@ export const Lupa = ({ tamanho, cor, olharX = 0, olharY = 0, piscando = false }:
   );
 };
 
+type PropsMascote = { mascote: string; tamanho: number; cor: string; olharX?: number; olharY?: number; piscando?: boolean };
+
+export const Mascote = ({ mascote, tamanho, cor, olharX, olharY, piscando }: PropsMascote) => {
+  if (mascote === "nenhum") return null;
+  if (mascote === "lupa") return <Lupa tamanho={tamanho} cor={cor} olharX={olharX} olharY={olharY} piscando={piscando} />;
+  const piscada = piscando ? "scaleY(0.92)" : "none";
+  return <Img src={staticFile(mascote)} style={{ width: tamanho, height: tamanho, objectFit: "contain", transformOrigin: "50% 100%", transform: piscada }} />;
+};
+
 export const Progresso = ({ duracao, cor, borda }: { duracao: number; cor: string; borda: string }) => {
   const quadro = useCurrentFrame();
   const largura = interpolate(quadro, [0, duracao], [0, 100], LIMITE);

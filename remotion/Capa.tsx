@@ -1,5 +1,5 @@
 import { AbsoluteFill } from "remotion";
-import { Destaque, FotoDoProduto, Lupa, Marca } from "./componentes";
+import { Destaque, FotoDoProduto, Marca, Mascote } from "./componentes";
 import { juntarDestaques, separarFala } from "./engine/texto.ts";
 import { BRANCO, FONTE_TITULO } from "./tema";
 import type { Timeline } from "./tipos";
@@ -21,9 +21,9 @@ export const Capa = (timeline: Timeline) => (
   <AbsoluteFill style={{ background: timeline.cores.destaque }}>
     {timeline.capa.foto ? <FotoDoProduto foto={timeline.capa.foto} inicio={-60} topo={760} tamanho={760} /> : null}
     <Titulo timeline={timeline} />
-    {timeline.mascote === "lupa" ? (
+    {timeline.mascote !== "nenhum" ? (
       <div style={{ position: "absolute", bottom: 90, right: 70 }}>
-        <Lupa tamanho={240} cor={timeline.cores.primaria} olharX={-12} olharY={-8} />
+        <Mascote mascote={timeline.mascote} tamanho={240} cor={timeline.cores.primaria} olharX={-12} olharY={-8} />
       </div>
     ) : null}
     {timeline.marca ? <Marca texto={timeline.marca} cor={timeline.cores.primaria} corTexto={BRANCO} /> : null}

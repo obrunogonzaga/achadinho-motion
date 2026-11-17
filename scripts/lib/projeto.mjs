@@ -38,6 +38,8 @@ export const gravarJson = (arquivo, dados) => {
 
 export const arquivosConhecidos = (ficha) => new Set(ficha.fotos.flatMap((foto) => [foto.arquivo, ...(foto.recorte ? [nomeDoRecorte(foto.arquivo)] : [])]));
 
+const mascoteEhArquivo = (ficha) => ficha.mascote && !["lupa", "nenhum"].includes(ficha.mascote);
+
 const problemasDaFicha = (ficha, caminhos) => {
   const conhecidos = arquivosConhecidos(ficha);
   return [
@@ -45,6 +47,7 @@ const problemasDaFicha = (ficha, caminhos) => {
     ...ficha.fotos.filter((foto) => !existsSync(path.join(caminhos.fotos, foto.arquivo))).map((foto) => `foto não está em fotos/: ${foto.arquivo}`),
     ...ficha.cenas.filter((cena) => cena.foto && !conhecidos.has(cena.foto)).map((cena) => `cena ${cena.tipo} usa "${cena.foto}", que não está em fotos[]`),
     ...ficha.cenas.filter((cena) => !cena.fala?.trim()).map((cena) => `cena ${cena.tipo} sem fala`),
+    ...(mascoteEhArquivo(ficha) && !existsSync(path.join(caminhos.raiz, ficha.mascote)) ? [`mascote não encontrado: ${ficha.mascote}`] : []),
   ];
 };
 

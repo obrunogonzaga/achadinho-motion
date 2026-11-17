@@ -17,7 +17,7 @@ export type Ficha = {
   anuncio?: string;
   marca?: string;
   palavraChave?: string;
-  mascote?: "lupa" | "nenhum";
+  mascote?: "lupa" | "nenhum" | string;
   emocao?: string;
   cores?: Partial<Cores>;
   fotos: FotoFicha[];
@@ -46,7 +46,7 @@ export type Timeline = {
   trilha: string | null;
   volumeTrilha: number;
   cores: Cores;
-  mascote: "lupa" | "nenhum";
+  mascote: string;
   marca: string | null;
   palavraChave: string | null;
   capa: { titulo: string; foto: string | null };

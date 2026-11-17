@@ -65,7 +65,7 @@ No `roteiro.json`:
 - `cores`: fundo, destaque, primária e claro
 - `marca`: o @ do perfil no canto
 - `palavraChave`: mostra o botão "Comenta PALAVRA" no final
-- `mascote`: `"lupa"` ou `"nenhum"`
+- `mascote`: `"lupa"`, `"nenhum"` ou o arquivo do mascote da sua marca (`"mascote.svg"`, com fundo transparente)
 
 Para mudar o visual, edite `remotion/cenas.tsx` e veja ao vivo com `npm run studio`.
 

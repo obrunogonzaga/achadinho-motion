@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
-import { Camera, Carimbo, FotoDoProduto, Legenda, Lupa, Numero, usePop } from "./componentes";
+import { Camera, Carimbo, FotoDoProduto, Legenda, Mascote, Numero, usePop } from "./componentes";
 import { BRANCO, FONTE_TITULO, LIMITE, TINTA } from "./tema";
 import type { Cena, Timeline, TipoCena } from "./tipos";
 
@@ -81,13 +81,13 @@ const BotaoComenta = ({ palavra, inicio, cor, corTexto }: { palavra: string; ini
   return <div style={estilo}>Comenta {palavra}</div>;
 };
 
-const LupaPulando = ({ inicio, cor }: { inicio: number; cor: string }) => {
+const MascotePulando = ({ mascote, inicio, cor }: { mascote: string; inicio: number; cor: string }) => {
   const quadro = useCurrentFrame();
   const pop = usePop(inicio);
   const pulo = Math.abs(Math.sin((quadro - inicio) * 0.22)) * -40;
   return (
     <div style={{ position: "absolute", top: 1420, right: 90, transform: `translateY(${pulo}px) scale(${pop})` }}>
-      <Lupa tamanho={300} cor={cor} olharX={-14} olharY={-6} />
+      <Mascote mascote={mascote} tamanho={300} cor={cor} olharX={-14} olharY={-6} />
     </div>
   );
 };
@@ -99,7 +99,7 @@ const CenaChamada = ({ cena, timeline }: PropsCena) => {
       <Camera socos={momentosDeDestaque(cena)}>
         <Legenda palavras={cena.palavras} cor={cores.primaria} corDestaque={{ cor: cores.primaria, corTexto: cores.destaque }} topo={420} />
         {palavraChave ? <BotaoComenta palavra={palavraChave} inicio={cena.palavras[0].quadro} cor={cores.primaria} corTexto={BRANCO} /> : null}
-        {mascote === "lupa" ? <LupaPulando inicio={4} cor={cores.primaria} /> : null}
+        <MascotePulando mascote={mascote} inicio={4} cor={cores.primaria} />
       </Camera>
     </AbsoluteFill>
   );
