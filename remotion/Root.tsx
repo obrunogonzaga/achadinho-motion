@@ -1,30 +1,26 @@
 import { Composition, Still, type CalculateMetadataFunction } from "remotion";
 import { Capa } from "./Capa";
+import { estimarPalavras } from "./engine/estimativa.ts";
+import { montarTimeline } from "./engine/timing.ts";
 import { Reel } from "./Reel";
 import { ALTURA, LARGURA } from "./tema";
-import type { Timeline } from "./tipos";
+import type { Ficha, Timeline } from "./tipos";
 
-const palavras = (texto: string, inicio: number, destaques: string[] = []) =>
-  texto.split(" ").map((palavra, indice) => ({ texto: palavra, quadro: inicio + indice * 9, destaque: destaques.includes(palavra) }));
-
-const DEMONSTRACAO: Timeline = {
-  fps: 30,
-  duracaoFrames: 240,
-  atrasoVoz: 3,
-  trilha: null,
-  volumeTrilha: 0.5,
-  cores: { fundo: "#0B0B0F", destaque: "#FFD400", primaria: "#1E35C9", claro: "#F2F4FF" },
-  mascote: "lupa",
+const FICHA_DEMONSTRACAO: Ficha = {
+  produto: "Demonstração",
   marca: "@seuperfil",
   palavraChave: "MOTION",
-  capa: { titulo: "Coloque o título da capa aqui", destaque: "título", foto: null },
+  fotos: [],
+  capa: { titulo: "Coloque o [título] da capa aqui" },
   cenas: [
-    { tipo: "dor", inicio: 0, fim: 60, voz: null, foto: null, carimbo: null, numero: null, palavras: palavras("Cansou de tropeçar no escuro?", 3, ["escuro?"]) },
-    { tipo: "achado", inicio: 60, fim: 120, voz: null, foto: null, carimbo: "Achado!", numero: null, palavras: palavras("Achei a solução por pouco.", 3, ["solução"]) },
-    { tipo: "sinal", inicio: 120, fim: 180, voz: null, foto: null, carimbo: null, numero: 1, palavras: palavras("Acende sozinha quando você passa.", 3, ["sozinha"]) },
-    { tipo: "chamada", inicio: 180, fim: 240, voz: null, foto: null, carimbo: null, numero: null, palavras: palavras("Comenta MOTION que eu te mando.", 3, ["MOTION"]) },
+    { tipo: "dor", fala: "Cansou de tropeçar no [escuro?]" },
+    { tipo: "achado", fala: "Achei a [solução] por pouco." },
+    { tipo: "sinal", fala: "Acende [sozinha] quando você passa." },
+    { tipo: "chamada", fala: "Comenta [MOTION] que eu te mando." },
   ],
 };
+
+const DEMONSTRACAO: Timeline = montarTimeline(FICHA_DEMONSTRACAO, estimarPalavras(FICHA_DEMONSTRACAO), { voz: null });
 
 const calcularMetadados: CalculateMetadataFunction<Timeline> = ({ props }) => ({
   durationInFrames: props.duracaoFrames,

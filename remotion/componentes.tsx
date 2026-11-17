@@ -40,30 +40,47 @@ export const Destaque = ({ children, cor, corTexto }: { children: ReactNode; cor
 
 type CorDestaque = { cor: string; corTexto: string };
 
-const PalavraAnimada = ({ palavra, corDestaque }: { palavra: Palavra; corDestaque: CorDestaque }) => {
-  const pop = usePop(palavra.quadro);
-  const conteudo = palavra.destaque ? <Destaque {...corDestaque}>{palavra.texto}</Destaque> : palavra.texto;
-  const estilo: CSSProperties = { display: "inline-block", margin: "0 0.12em", opacity: Math.min(pop * 3, 1), transform: `translateY(${(1 - pop) * 40}px) scale(${0.6 + pop * 0.4})` };
+type Unidade = { texto: string; quadro: number; destaque: boolean; palavras: number };
+
+const agruparDestaques = (palavras: Palavra[]) =>
+  palavras.reduce<Unidade[]>((unidades, palavra) => {
+    const anterior = unidades[unidades.length - 1];
+    const continua = anterior?.destaque && palavra.destaque && !/[.!?,:;]$/.test(anterior.texto);
+    if (continua) return [...unidades.slice(0, -1), { ...anterior, texto: `${anterior.texto} ${palavra.texto}`, palavras: anterior.palavras + 1 }];
+    return [...unidades, { texto: palavra.texto, quadro: palavra.quadro, destaque: palavra.destaque, palavras: 1 }];
+  }, []);
+
+const UnidadeAnimada = ({ unidade, corDestaque }: { unidade: Unidade; corDestaque: CorDestaque }) => {
+  const pop = usePop(unidade.quadro);
+  const conteudo = unidade.destaque ? <Destaque {...corDestaque}>{unidade.texto}</Destaque> : unidade.texto;
+  const estilo: CSSProperties = { display: "inline-block", whiteSpace: "nowrap", margin: "0 0.12em", opacity: Math.min(pop * 3, 1), transform: `translateY(${(1 - pop) * 40}px) scale(${0.6 + pop * 0.4})` };
   return <span style={estilo}>{conteudo}</span>;
 };
 
-const separarPorPontuacao = (palavras: Palavra[]) =>
-  palavras.reduce<Palavra[][]>((trechos, palavra) => {
-    trechos[trechos.length - 1].push(palavra);
-    if (/[.!?,:;]$/.test(palavra.texto)) trechos.push([]);
+const separarPorPontuacao = (unidades: Unidade[]) =>
+  unidades.reduce<Unidade[][]>((trechos, unidade) => {
+    trechos[trechos.length - 1].push(unidade);
+    if (/[.!?,:;]$/.test(unidade.texto)) trechos.push([]);
     return trechos;
   }, [[]]).filter((trecho) => trecho.length > 0);
 
-const dividirIgualmente = (trecho: Palavra[]) => {
-  const partes = Math.ceil(trecho.length / MAX_PALAVRAS_POR_BLOCO);
-  const tamanho = Math.ceil(trecho.length / partes);
-  return Array.from({ length: partes }, (_, parte) => trecho.slice(parte * tamanho, (parte + 1) * tamanho));
+const contarPalavras = (unidades: Unidade[]) => unidades.reduce((total, unidade) => total + unidade.palavras, 0);
+
+const dividirIgualmente = (trecho: Unidade[]) => {
+  const partes = Math.ceil(contarPalavras(trecho) / MAX_PALAVRAS_POR_BLOCO);
+  const alvo = contarPalavras(trecho) / partes;
+  return trecho.reduce<Unidade[][]>((blocos, unidade) => {
+    const atual = blocos[blocos.length - 1];
+    if (atual.length && contarPalavras(atual) + unidade.palavras > Math.ceil(alvo)) return [...blocos, [unidade]];
+    atual.push(unidade);
+    return blocos;
+  }, [[]]);
 };
 
-export const separarEmBlocos = (palavras: Palavra[]) => separarPorPontuacao(palavras).flatMap(dividirIgualmente);
+export const separarEmBlocos = (palavras: Palavra[]) => separarPorPontuacao(agruparDestaques(palavras)).flatMap(dividirIgualmente);
 
-const tamanhoDaFonte = (bloco: Palavra[], base: number) => {
-  const letras = bloco.reduce((total, palavra) => total + palavra.texto.length, 0);
+const tamanhoDaFonte = (bloco: Unidade[], base: number) => {
+  const letras = bloco.reduce((total, unidade) => total + unidade.texto.length, 0);
   if (letras > 26) return base * 0.78;
   if (letras > 18) return base * 0.9;
   return base;
@@ -78,7 +95,7 @@ export const Legenda = ({ palavras, cor, corDestaque, topo, tamanho = 112 }: Pro
   const estilo: CSSProperties = { position: "absolute", top: topo, left: 70, right: 70, textAlign: "center", textWrap: "balance", color: cor, font: `800 ${tamanhoDaFonte(visivel, tamanho)}px/1.12 ${FONTE_TITULO}`, letterSpacing: "-0.03em" };
   return (
     <div style={estilo}>
-      {visivel.map((palavra) => <PalavraAnimada key={`${palavra.quadro}-${palavra.texto}`} palavra={palavra} corDestaque={corDestaque} />)}
+      {visivel.map((unidade) => <UnidadeAnimada key={`${unidade.quadro}-${unidade.texto}`} unidade={unidade} corDestaque={corDestaque} />)}
     </div>
   );
 };
@@ -108,7 +125,19 @@ export const CartaoFoto = ({ foto, inicio, topo, tamanho, giro = -3, borda = BRA
   );
 };
 
-export const Numero = ({ valor, inicio, cor, corTexto }: { valor: number; inicio: number; cor: string; corTexto: string }) => {
+const FotoSolta = ({ foto, inicio, topo, tamanho, giro = -3 }: PropsCartao) => {
+  const quadro = useCurrentFrame();
+  const pop = usePop(inicio, 160);
+  const flutua = Math.sin((quadro - inicio) * 0.07) * 14;
+  const estilo: CSSProperties = { position: "absolute", top: topo, left: "50%", width: tamanho, height: tamanho, marginLeft: -tamanho / 2, objectFit: "contain", filter: "drop-shadow(0 40px 50px rgba(0,0,0,0.35))", transform: `translateY(${flutua}px) rotate(${giro * pop}deg) scale(${pop})` };
+  return <Img src={staticFile(foto)} style={estilo} />;
+};
+
+export const ehRecorte = (foto: string) => foto.endsWith("-recorte.png");
+
+export const FotoDoProduto = (props: PropsCartao) => (ehRecorte(props.foto) ? <FotoSolta {...props} /> : <CartaoFoto {...props} />);
+
+export const Numero =({ valor, inicio, cor, corTexto }: { valor: number; inicio: number; cor: string; corTexto: string }) => {
   const pop = usePop(inicio);
   const estilo: CSSProperties = { position: "absolute", top: 150, left: 80, width: 150, height: 150, borderRadius: "50%", background: cor, color: corTexto, font: `800 100px/150px ${FONTE_TITULO}`, textAlign: "center", transform: `scale(${pop}) rotate(${(1 - pop) * -90}deg)` };
   return <div style={estilo}>{valor}</div>;

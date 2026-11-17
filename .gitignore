@@ -3,3 +3,4 @@ projetos/
 out/
 .DS_Store
 __pycache__/
+tools/bin/

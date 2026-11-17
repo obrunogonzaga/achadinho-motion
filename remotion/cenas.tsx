@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { Camera, Carimbo, CartaoFoto, Legenda, Lupa, Numero, usePop } from "./componentes";
+import { Camera, Carimbo, FotoDoProduto, Legenda, Lupa, Numero, usePop } from "./componentes";
 import { BRANCO, FONTE_TITULO, TINTA } from "./tema";
 import type { Cena, Timeline, TipoCena } from "./tipos";
 
@@ -27,7 +27,7 @@ const CenaAchado = ({ cena, timeline }: PropsCena) => {
   return (
     <AbsoluteFill style={{ background: cores.destaque }}>
       <Camera socos={[carimbo]}>
-        {cena.foto ? <CartaoFoto foto={cena.foto} inicio={2} topo={500} tamanho={780} /> : null}
+        {cena.foto ? <FotoDoProduto foto={cena.foto} inicio={2} topo={500} tamanho={780} /> : null}
         <Carimbo texto={cena.carimbo ?? "Achado!"} inicio={carimbo} cor={cores.primaria} topo={410} direita={60} />
         <Legenda palavras={cena.palavras} cor={cores.primaria} corDestaque={{ cor: cores.primaria, corTexto: cores.destaque }} topo={1380} />
       </Camera>
@@ -41,7 +41,7 @@ const CenaSinal = ({ cena, timeline }: PropsCena) => {
   return (
     <AbsoluteFill style={{ background: cores.claro }}>
       <Camera socos={[carimbo]}>
-        {cena.foto ? <CartaoFoto foto={cena.foto} inicio={0} topo={300} tamanho={720} giro={cena.numero && cena.numero % 2 === 0 ? 3 : -3} /> : null}
+        {cena.foto ? <FotoDoProduto foto={cena.foto} inicio={0} topo={300} tamanho={720} giro={cena.numero && cena.numero % 2 === 0 ? 3 : -3} /> : null}
         {cena.numero ? <Numero valor={cena.numero} inicio={2} cor={cores.primaria} corTexto={BRANCO} /> : null}
         {cena.carimbo ? <Carimbo texto={cena.carimbo} inicio={carimbo} cor={cores.primaria} topo={880} direita={80} giro={8} /> : null}
         <Legenda palavras={cena.palavras} cor={TINTA} corDestaque={{ cor: cores.destaque, corTexto: TINTA }} topo={1150} />
