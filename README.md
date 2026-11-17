@@ -4,7 +4,7 @@ Skill para Claude Code (e outros agentes que leem `SKILL.md`) que transforma fot
 
 Você manda de 2 a 6 fotos do produto e o texto do anúncio. O agente:
 
-1. escreve um roteiro de ~25 s (dor → achado → 3 sinais → chamada), só com funções que estão no anúncio;
+1. escreve um roteiro de ~30 s (dor → achado → 3 sinais → chamada), só com funções que estão no anúncio;
 2. gera a narração com o seu TTS de linha de comando ou pelo ElevenLabs;
 3. marca o tempo de cada palavra (pelo próprio TTS ou com o whisper);
 4. monta a trilha com efeitos sonoros;

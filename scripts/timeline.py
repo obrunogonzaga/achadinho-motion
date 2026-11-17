@@ -10,9 +10,10 @@ import tempfile
 from pathlib import Path
 
 FPS = 30
-ATRASO_VOZ = 3
-FOLGA_ENTRE_CENAS = 6
-FOLGA_FINAL = 36
+ATRASO_VOZ = 10
+FOLGA_ENTRE_CENAS = 26
+FOLGA_FINAL = 75
+MINIMO_POR_CENA = 105
 MODELO_WHISPER = os.environ.get("WHISPER_MODEL", "small")
 CORES_PADRAO = {"fundo": "#0B0B0F", "destaque": "#FFD400", "primaria": "#1E35C9", "claro": "#F2F4FF"}
 TIPOS = {"dor", "achado", "sinal", "chamada"}
@@ -82,7 +83,7 @@ def estimar_inicios(tokens):
     inicios, tempo = [], 0.0
     for token in tokens:
         inicios.append(tempo)
-        tempo += 0.26 + 0.035 * len(token)
+        tempo += 0.3 + 0.04 * len(token)
         tempo += 0.38 if re.search(r"[.!?]$", token) else 0.2 if re.search(r"[,;:]$", token) else 0
     return inicios, tempo + 0.2
 
@@ -119,7 +120,7 @@ def montar_cena(projeto, roteiro, ouvidas, indice, inicio, numero):
     tokens = cena["fala"].split()
     inicios, duracao, voz = tempos_da_cena(projeto, arquivo_de_voz(projeto, indice, cena), ouvidas, tokens)
     ultima = indice == len(roteiro["cenas"]) - 1
-    tamanho = ATRASO_VOZ + round(duracao * FPS) + (FOLGA_FINAL if ultima else FOLGA_ENTRE_CENAS)
+    tamanho = max(MINIMO_POR_CENA, ATRASO_VOZ + round(duracao * FPS) + (FOLGA_FINAL if ultima else FOLGA_ENTRE_CENAS))
     return {
         "tipo": cena["tipo"], "inicio": inicio, "fim": inicio + tamanho, "voz": voz,
         "foto": caminho_da_foto(roteiro, cena.get("foto")), "carimbo": cena.get("carimbo"),

@@ -17,7 +17,7 @@ from pathlib import Path
 API = "https://api.elevenlabs.io/v1/text-to-speech/{voz}?output_format=mp3_44100_128"
 VOZ_PADRAO = "GK4ZNLi5L8ZOBBT2Kaww"
 MODELO_PADRAO = "eleven_v3"
-VELOCIDADE_PADRAO = "1.1"
+VELOCIDADE_PADRAO = "1"
 
 
 def base_da_cena(projeto, indice, cena):

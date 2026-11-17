@@ -1,6 +1,6 @@
 ---
 name: achadinho-motion
-description: Transforma de 2 a 6 fotos de um achadinho (produto de afiliado Shopee, Amazon, Mercado Livre etc.) em um Reel vertical animado de ~25 s, com legenda palavra por palavra, carimbos, trilha, voz opcional pelo ElevenLabs e capa JPEG. Usar quando pedirem "faz um vídeo desse achadinho", "transforma essas fotos em Reel", "vídeo pro TikTok desse produto", "motion do produto" ou mandarem fotos de produto com o texto ou link do anúncio.
+description: Transforma de 2 a 6 fotos de um achadinho (produto de afiliado Shopee, Amazon, Mercado Livre etc.) em um Reel vertical animado de ~30 s, com legenda palavra por palavra, carimbos, trilha, voz opcional pelo ElevenLabs e capa JPEG. Usar quando pedirem "faz um vídeo desse achadinho", "transforma essas fotos em Reel", "vídeo pro TikTok desse produto", "motion do produto" ou mandarem fotos de produto com o texto ou link do anúncio.
 ---
 
 # achadinho-motion
@@ -46,7 +46,7 @@ reels/luminaria-sensor/
 
 ### 3. Escrever o `roteiro.json`
 
-Estrutura fixa de 6 cenas, cerca de 25 s e no máximo ~65 palavras no total:
+Estrutura fixa de 6 cenas, cerca de 30 s e no máximo ~65 palavras no total. Cada cena fica pelo menos 3,5 s na tela, com pausa de quase 1 s depois da fala, então texto curto é melhor que texto corrido:
 
 | Cena | `tipo` | O que diz | Foto |
 |---|---|---|---|
@@ -105,7 +105,7 @@ Em ordem:
 3. `trilha.py`: batida com efeitos nos cortes, destaques e carimbos → `trilha.wav`.
 4. Remotion: `out/video.mp4` e `out/capa.jpg`.
 
-Variáveis opcionais: `ELEVENLABS_VOICE_ID` (padrão: Leo, português neutro), `ELEVENLABS_MODEL` (padrão `eleven_v3`), `VELOCIDADE_VOZ` (padrão `1.1` no ElevenLabs e `1` no `VOZ_COMANDO`, que já controla a própria velocidade), `WHISPER_MODEL` (padrão `small`).
+Variáveis opcionais: `ELEVENLABS_VOICE_ID` (padrão: Leo, português neutro), `ELEVENLABS_MODEL` (padrão `eleven_v3`), `VELOCIDADE_VOZ` (padrão `1`; no `VOZ_COMANDO`, a velocidade é a do próprio comando), `WHISPER_MODEL` (padrão `small`).
 
 Se o ElevenLabs responder `voice_not_found`, adicione a voz Leo em My Voices na sua conta ou use outra em `ELEVENLABS_VOICE_ID`.
 
