@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 export const RAIZ_DA_SKILL = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
 
-const TIPOS = new Set(["dor", "achado", "sinal", "chamada"]);
+const TIPOS = new Set(["gancho", "dor", "achado", "sinal", "chamada"]);
 
 export const nomeDoRecorte = (arquivo) => arquivo.replace(/\.[^.]+$/, "-recorte.png");
 

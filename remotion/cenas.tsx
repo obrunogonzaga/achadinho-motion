@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react";
-import { AbsoluteFill, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
 import { Camera, Carimbo, FotoDoProduto, Legenda, Lupa, Numero, usePop } from "./componentes";
-import { BRANCO, FONTE_TITULO, TINTA } from "./tema";
+import { BRANCO, FONTE_TITULO, LIMITE, TINTA } from "./tema";
 import type { Cena, Timeline, TipoCena } from "./tipos";
 
 type PropsCena = { cena: Cena; timeline: Timeline };
@@ -16,6 +16,29 @@ const CenaDor = ({ cena, timeline }: PropsCena) => {
     <AbsoluteFill style={{ background: cores.fundo }}>
       <Camera socos={momentosDeDestaque(cena)}>
         <Legenda palavras={cena.palavras} cor={BRANCO} corDestaque={{ cor: cores.destaque, corTexto: cores.fundo }} topo={760} tamanho={124} />
+      </Camera>
+    </AbsoluteFill>
+  );
+};
+
+const FotoDeFundo = ({ foto }: { foto: string }) => {
+  const quadro = useCurrentFrame();
+  const aproximacao = interpolate(quadro, [0, 150], [1.08, 1.22], LIMITE);
+  return (
+    <AbsoluteFill>
+      <Img src={staticFile(foto)} style={{ width: "100%", height: "100%", objectFit: "cover", transform: `scale(${aproximacao})` }} />
+      <AbsoluteFill style={{ background: "linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.82) 78%)" }} />
+    </AbsoluteFill>
+  );
+};
+
+const CenaGancho = ({ cena, timeline }: PropsCena) => {
+  const { cores } = timeline;
+  return (
+    <AbsoluteFill style={{ background: cores.fundo }}>
+      <Camera socos={momentosDeDestaque(cena)}>
+        {cena.foto ? <FotoDeFundo foto={cena.foto} /> : null}
+        <Legenda palavras={cena.palavras} cor={BRANCO} corDestaque={{ cor: cores.destaque, corTexto: cores.fundo }} topo={cena.foto ? 1240 : 760} tamanho={120} />
       </Camera>
     </AbsoluteFill>
   );
@@ -83,6 +106,7 @@ const CenaChamada = ({ cena, timeline }: PropsCena) => {
 };
 
 export const VISUAIS: Record<TipoCena, (props: PropsCena) => React.JSX.Element> = {
+  gancho: CenaGancho,
   dor: CenaDor,
   achado: CenaAchado,
   sinal: CenaSinal,

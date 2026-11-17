@@ -10,7 +10,7 @@ const MODELO = {
   fotos: [{ arquivo: "1.jpg", recorte: true }, { arquivo: "2.jpg" }, { arquivo: "3.jpg" }],
   capa: { titulo: "TODO: título com [destaque]", foto: "1-recorte.png" },
   cenas: [
-    { tipo: "dor", fala: "TODO: o problema do dia a dia, com uma palavra em [destaque]." },
+    { tipo: "gancho", fala: "TODO: o que o produto faz, com uma palavra em [destaque].", foto: "1.jpg" },
     { tipo: "achado", fala: "Achei TODO.", foto: "1-recorte.png" },
     { tipo: "sinal", fala: "TODO: primeira função.", foto: "2.jpg", fonte: "TODO: trecho do anúncio" },
     { tipo: "sinal", fala: "TODO: segunda função.", foto: "3.jpg", fonte: "TODO: trecho do anúncio" },

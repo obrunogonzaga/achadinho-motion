@@ -1,4 +1,4 @@
-export type TipoCena = "dor" | "achado" | "sinal" | "chamada";
+export type TipoCena = "gancho" | "dor" | "achado" | "sinal" | "chamada";
 
 export type Cores = { fundo: string; destaque: string; primaria: string; claro: string };
 

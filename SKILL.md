@@ -60,7 +60,7 @@ As paradas marcadas com ⏸ esperam a aprovação do usuário. Não pule nenhuma
   "fotos": [{ "arquivo": "1.jpg", "recorte": true }, { "arquivo": "2.jpg" }, { "arquivo": "3.jpg" }],
   "capa": { "titulo": "Nunca mais tropeça no [escuro]", "foto": "1-recorte.png" },
   "cenas": [
-    { "tipo": "dor", "fala": "Levantou de madrugada e tropeçou no [escuro] de novo?" },
+    { "tipo": "gancho", "fala": "Acende [sozinha] quando você passa. Apaga sozinha depois.", "foto": "1.jpg" },
     { "tipo": "achado", "fala": "Achei a luz que resolve isso [sem fio] nenhum.", "foto": "1-recorte.png" },
     { "tipo": "sinal", "fala": "Acende [sozinha] quando você passa.", "foto": "2.jpg", "fonte": "Sensor PIR: acende ao detectar movimento" },
     { "tipo": "sinal", "fala": "Cola com fita, sem [furar] parede.", "foto": "3.jpg", "carimbo": "Sem furo", "fonte": "Instalação com fita adesiva 3M" },
@@ -70,7 +70,9 @@ As paradas marcadas com ⏸ esperam a aprovação do usuário. Não pule nenhuma
 }
 ```
 
-- **Estrutura fixa:** 6 cenas, nesta ordem: `dor`, `achado`, 3 × `sinal`, `chamada`.
+- **Estrutura fixa:** 6 cenas, nesta ordem: abertura, `achado`, 3 × `sinal`, `chamada`.
+- **Abertura para vender: `gancho`.** Foto do produto funcionando em tela cheia desde o primeiro quadro, com a fala dizendo o que ele faz ("Acende [sozinha] quando você passa."). Reel de afiliado converte quando o primeiro quadro é o produto, não a piada. `dor` (só texto no escuro) fica para quando o objetivo é alcance.
+- **Funções contra objeções:** cada `sinal` responde uma dúvida de compra, na ordem em que ela aparece: funciona mesmo? é difícil de instalar? vai durar? Prova social real (nota e vendidos do anúncio, conferidos no dia) vai no `achado`.
 - **Duração:** 22 a 40 s, mirando ~30 s. No máximo ~65 palavras no total. Cada cena fica pelo menos 3,5 s na tela, com pausa de quase 1 s depois da fala, então frase curta é melhor que texto corrido.
 - **Destaque:** 1 ou 2 por cena, entre colchetes na fala: `"sem [furar] parede"`. Várias palavras seguidas viram uma caixa só: `"[sem fio]"`. Os colchetes saem antes da voz.
 - **Fotos:** `fotos[]` lista os arquivos de `fotos/`. Com `recorte: true`, a etapa `recorte` cria `<nome>-recorte.png` sem fundo (macOS). Nas cenas, `foto` é o nome do arquivo: o recorte flutua com sombra, e a foto inteira vira um card.
@@ -78,7 +80,7 @@ As paradas marcadas com ⏸ esperam a aprovação do usuário. Não pule nenhuma
 - **Proibido:** preço, desconto, cupom, frete grátis, "acabando". Muda rápido e o vídeo fica mentindo. A checagem acusa.
 - **Proibido:** imagem gerada do produto. Só fotos do anúncio ou do usuário.
 - **Tom:** frases curtas e faladas, em português do Brasil. Uma ideia por cena. Sem "melhor do mundo", "revolucionário" ou "você não vai acreditar".
-- **`dor`** não cita o produto. **`chamada`** pede uma ação só e fala a `palavraChave`, se houver.
+- **`dor`**, quando usada, não cita o produto. **`chamada`** pede uma ação só e fala a `palavraChave`, se houver.
 - `carimbo`: até 2 palavras, batendo na foto no primeiro destaque. Na cena `achado`, o padrão é "Achado!".
 - `emocao` (opcional): tag de emoção do ElevenLabs v3, como `excited`. Ignorada por outros TTS.
 

@@ -3,7 +3,7 @@ import { AbsoluteFill, Img, interpolate, spring, staticFile, useCurrentFrame, us
 import { BRANCO, FONTE_TEXTO, FONTE_TITULO, LIMITE, TINTA } from "./tema";
 import type { Palavra } from "./tipos";
 
-const MAX_PALAVRAS_POR_BLOCO = 6;
+const MAX_PALAVRAS_POR_BLOCO = 7;
 
 export const usePop = (inicio: number, rigidez = 220) => {
   const quadro = useCurrentFrame();
@@ -60,7 +60,7 @@ const UnidadeAnimada = ({ unidade, corDestaque }: { unidade: Unidade; corDestaqu
 const separarPorPontuacao = (unidades: Unidade[]) =>
   unidades.reduce<Unidade[][]>((trechos, unidade) => {
     trechos[trechos.length - 1].push(unidade);
-    if (/[.!?,:;]$/.test(unidade.texto)) trechos.push([]);
+    if (/[.!?]$/.test(unidade.texto)) trechos.push([]);
     return trechos;
   }, [[]]).filter((trecho) => trecho.length > 0);
 
@@ -77,7 +77,21 @@ const dividirIgualmente = (trecho: Unidade[]) => {
   }, [[]]);
 };
 
-export const separarEmBlocos = (palavras: Palavra[]) => separarPorPontuacao(agruparDestaques(palavras)).flatMap(dividirIgualmente);
+const virgulaMaisCentral = (trecho: Unidade[]) => {
+  const meio = contarPalavras(trecho) / 2;
+  const candidatas = trecho.map((unidade, indice) => ({ indice, distancia: Math.abs(contarPalavras(trecho.slice(0, indice + 1)) - meio) }))
+    .filter(({ indice }) => indice < trecho.length - 1 && /[,:;]$/.test(trecho[indice].texto));
+  return candidatas.sort((a, b) => a.distancia - b.distancia)[0]?.indice;
+};
+
+const dividirFrase = (trecho: Unidade[]): Unidade[][] => {
+  if (contarPalavras(trecho) <= MAX_PALAVRAS_POR_BLOCO) return [trecho];
+  const virgula = virgulaMaisCentral(trecho);
+  if (virgula === undefined) return dividirIgualmente(trecho);
+  return [...dividirFrase(trecho.slice(0, virgula + 1)), ...dividirFrase(trecho.slice(virgula + 1))];
+};
+
+export const separarEmBlocos = (palavras: Palavra[]) => separarPorPontuacao(agruparDestaques(palavras)).flatMap(dividirFrase);
 
 const tamanhoDaFonte = (bloco: Unidade[], base: number) => {
   const letras = bloco.reduce((total, unidade) => total + unidade.texto.length, 0);
